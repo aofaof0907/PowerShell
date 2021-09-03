@@ -437,6 +437,14 @@ Fix steps:
         $Arguments += "--output", (Split-Path $Options.Output)
     }
 
+    # Add --self-contained due to "warning NETSDK1179: One of '--self-contained' or '--no-self-contained' options are required when '--runtime' is used."
+    if ($Options.Runtime -like 'fxdependent*') {
+        $Arguments += "--no-self-contained"
+    }
+    else {
+        $Arguments += "--self-contained"
+    }
+
     if ($Options.Runtime -like 'win*' -or ($Options.Runtime -like 'fxdependent*' -and $environment.IsWindows)) {
         $Arguments += "/property:IsWindows=true"
     }
@@ -857,7 +865,7 @@ function New-PSOptions {
                 }
             }
 
-            # We plan to release packages targetting win7-x64 and win7-x86 RIDs,
+            # We plan to release packages targeting win7-x64 and win7-x86 RIDs,
             # which supports all supported windows platforms.
             # So we, will change the RID to win7-<arch>
             $Runtime = $RID -replace "win\d+", "win7"
@@ -1215,7 +1223,13 @@ function Start-PSPester {
 
     if ($Unelevate)
     {
-        $outputBufferFilePath = [System.IO.Path]::GetTempFileName()
+        if ($environment.IsWindows) {
+            $outputBufferFilePath = [System.IO.Path]::GetTempFileName()
+        }
+        else {
+            # Azure DevOps agents do not have Temp folder setup on Ubuntu 20.04, hence using HOME directory
+            $outputBufferFilePath = (Join-Path $env:HOME $([System.IO.Path]::GetRandomFileName()))
+        }
     }
 
     $command += "Invoke-Pester "
@@ -1297,7 +1311,14 @@ function Start-PSPester {
 
     $PSFlags = @("-noprofile")
     if (-not [string]::IsNullOrEmpty($ExperimentalFeatureName)) {
-        $configFile = [System.IO.Path]::GetTempFileName()
+
+        if ($environment.IsWindows) {
+            $configFile = [System.IO.Path]::GetTempFileName()
+        }
+        else {
+            $configFile = (Join-Path $env:HOME $([System.IO.Path]::GetRandomFileName()))
+        }
+
         $configFile = [System.IO.Path]::ChangeExtension($configFile, ".json")
 
         ## Create the config.json file to enable the given experimental feature.
@@ -1376,7 +1397,13 @@ function Start-PSPester {
         {
             if ($PassThru.IsPresent)
             {
-                $passThruFile = [System.IO.Path]::GetTempFileName()
+                if ($environment.IsWindows) {
+                    $passThruFile = [System.IO.Path]::GetTempFileName()
+                }
+                else {
+                    $passThruFile = Join-Path $env:HOME $([System.IO.Path]::GetRandomFileName())
+                }
+
                 try
                 {
                     $command += "| Export-Clixml -Path '$passThruFile' -Force"

@@ -7396,7 +7396,7 @@ namespace System.Management.Automation
     }
 
     /// <summary>
-    /// This class is very similar to the restricted langauge checker, but it is meant to allow more things, yet still
+    /// This class is very similar to the restricted language checker, but it is meant to allow more things, yet still
     /// be considered "safe", at least in the sense that tab completion can rely on it to not do bad things.  The primary
     /// use is for intellisense where you don't want to run arbitrary code, but you do want to know the values
     /// of various expressions so you can get the members.
@@ -7652,7 +7652,7 @@ namespace System.Management.Automation
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyNameCompleter"/> class.
         /// </summary>
-        /// <param name="parameterNameOfInput">The name of the property of the input object for witch to complete with property names.</param>
+        /// <param name="parameterNameOfInput">The name of the property of the input object for which to complete with property names.</param>
         public PropertyNameCompleter(string parameterNameOfInput)
         {
             _parameterNameOfInput = parameterNameOfInput;

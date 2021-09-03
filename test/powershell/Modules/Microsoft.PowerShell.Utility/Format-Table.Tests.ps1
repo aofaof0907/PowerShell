@@ -849,11 +849,12 @@ A Name                                  B
 
 Describe 'Table color tests' {
     BeforeAll {
-        $PSDefaultParameterValues.Add('It:Skip', (-not $EnabledExperimentalFeatures.Contains('PSAnsiRendering')))
+        $originalRendering = $PSStyle.OutputRendering
+        $PSStyle.OutputRendering = 'Ansi'
     }
 
     AfterAll {
-        $PSDefaultParameterValues.Remove('It:Skip')
+        $PSStyle.OutputRendering = $originalRendering
     }
 
     It 'Table header should use FormatAccent' {

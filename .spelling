@@ -1260,6 +1260,7 @@ ini
 package.json
 jcotton42
 RPMs
+PSDesiredStateConfiguration
  - CHANGELOG/preview.md
 Gimly
 jborean93
@@ -1366,11 +1367,19 @@ adamsitnik
 msixbundle
 PowerShell-Native#70
 AppxManifest.xml
+preview.9
+ArmaanMcleod
+entrypoint
+lselden
+SethFalco
+CodeQL
+slowy07
  - CHANGELOG/7.0.md
 codesign
 release-BuildJson
 yml
 centos-7
+PSDesiredStateConfiguration
  - test/perf/benchmarks/README.md
 benchmarked
 BenchmarkDotNet
